@@ -70,7 +70,7 @@ Add your universal MCP servers (available in all projects):
 
 ```bash
 # Craft (personal note-taking)
-claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/JFiJbWF7lcT/mcp
+claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/2Jdsktu84i2/mcp
 
 # Add other universal MCPs here as needed
 ```
@@ -95,7 +95,7 @@ claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/lin
 
 | Name | Purpose | Command |
 |------|---------|---------|
-| craft-docs | Personal note-taking | `claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/JFiJbWF7lcT/mcp` |
+| craft-docs | Personal note-taking | `claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/2Jdsktu84i2/mcp` |
 
 ---
 
@@ -113,7 +113,7 @@ ls -la ~/.claude/CLAUDE.md
 claude mcp list
 
 # Re-add if missing
-claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/JFiJbWF7lcT/mcp
+claude mcp add --transport http craft-docs --scope user https://mcp.craft.do/links/2Jdsktu84i2/mcp
 ```
 
 ### zsh-syntax-highlighting not working
