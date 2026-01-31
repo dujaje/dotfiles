@@ -1,40 +1,39 @@
-ZSH=$HOME/.oh-my-zsh
+# Homebrew (must be first on Apple Silicon Macs)
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# You can change the theme with another one:
-#   https://github.com/robbyrussell/oh-my-zsh/wiki/themes
+# Oh My Zsh configuration
+ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 
-# Useful plugins for Rails development with Sublime Text
-plugins=(gitfast brew last-working-dir common-aliases sublime zsh-syntax-highlighting history-substring-search)
+# Plugins
+plugins=(gitfast brew last-working-dir common-aliases zsh-syntax-highlighting history-substring-search)
 
-# Prevent Homebrew from reporting - https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
+# Prevent Homebrew from reporting
 export HOMEBREW_NO_ANALYTICS=1
 
-# Actually load Oh-My-Zsh
+# Load Oh-My-Zsh
 source "${ZSH}/oh-my-zsh.sh"
 
-# Load rbenv
+# rbenv (Ruby version manager)
 eval "$(rbenv init -)"
 
-# Rails and Ruby uses the local `bin` folder to store binstubs.
-# So instead of running `bin/rails` like the doc says, just run `rails`
-# Same for `./node_modules/.bin` and nodejs
+# PATH additions
+# - ./bin for Rails binstubs
+# - ./node_modules/.bin for local npm packages
 export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 
-# Store your own aliases in the ~/.aliases file and load the here.
+# Load custom aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
-# Encoding stuff for the terminal
+# Encoding
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
 
+# NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export BUNDLER_EDITOR="subl $@ >/dev/null 2>&1"
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
-export BUNDLER_EDITOR="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+
+# Editor configuration (VS Code)
+export EDITOR="code --wait"
+export BUNDLER_EDITOR="code"

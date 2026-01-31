@@ -1,64 +1,69 @@
+#!/bin/zsh
+
+# Dotfiles installer
+# Creates symlinks from home directory to dotfiles
+
 backup() {
   target=$1
   if [ -e "$target" ]; then           # Does the config file already exist?
-    if [ ! -L "$target" ]; then       # as a pure file?
+    if [ ! -L "$target" ]; then       # as a pure file (not symlink)?
       mv "$target" "$target.backup"   # Then backup it
       echo "-----> Moved your old $target config file to $target.backup"
     fi
   fi
 }
 
-#!/bin/zsh
+# Symlink dotfiles
+echo "=== Symlinking dotfiles ==="
 for name in *; do
   if [ ! -d "$name" ]; then
     target="$HOME/.$name"
-    if [[ ! "$name" =~ '\.sh$' ]] && [ "$name" != 'README.md' ]; then
+    # Skip shell scripts and README
+    if [[ ! "$name" =~ '\.sh$' ]] && [[ ! "$name" =~ '\.md$' ]]; then
       backup $target
 
       if [ ! -e "$target" ]; then
-        echo "-----> Symlinking your new $target"
+        echo "-----> Symlinking $target"
         ln -s "$PWD/$name" "$target"
+      else
+        echo "-----> $target already exists (symlink)"
       fi
     fi
   fi
 done
 
-REGULAR="\\033[0;39m"
-YELLOW="\\033[1;33m"
-GREEN="\\033[1;32m"
-
-# zsh plugins
-CURRENT_DIR=`pwd`
+# Install zsh-syntax-highlighting plugin
+echo ""
+echo "=== Installing zsh plugins ==="
 ZSH_PLUGINS_DIR="$HOME/.oh-my-zsh/custom/plugins"
-mkdir -p "$ZSH_PLUGINS_DIR" && cd "$ZSH_PLUGINS_DIR"
+mkdir -p "$ZSH_PLUGINS_DIR"
+
 if [ ! -d "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting" ]; then
-  echo "-----> Installing zsh plugin 'zsh-syntax-highlighting'..."
-  git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
-fi
-cd "$CURRENT_DIR"
-
-setopt nocasematch
-if [[ ! `uname` =~ "darwin" ]]; then
-  git config --global core.editor "subl -n -w $@ >/dev/null 2>&1"
-  echo 'export BUNDLER_EDITOR="subl $@ >/dev/null 2>&1"' >> zshrc
+  echo "-----> Installing zsh-syntax-highlighting..."
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting"
 else
-  git config --global core.editor "'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl' -n -w"
-  bundler_editor="'/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl'"
-  echo "export BUNDLER_EDITOR=\"${bundler_editor}\"" >> zshrc
+  echo "-----> zsh-syntax-highlighting already installed"
 fi
 
-# Sublime Text
-if [[ ! `uname` =~ "darwin" ]]; then
-  SUBL_PATH=~/.config/sublime-text-3
-else
-  SUBL_PATH=~/Library/Application\ Support/Sublime\ Text\ 3
+# Claude Code setup
+echo ""
+echo "=== Claude Code setup ==="
+if [ -d "$PWD/claude" ]; then
+  mkdir -p "$HOME/.claude"
+  if [ ! -L "$HOME/.claude/CLAUDE.md" ]; then
+    backup "$HOME/.claude/CLAUDE.md"
+    echo "-----> Symlinking Claude config"
+    ln -s "$PWD/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+  else
+    echo "-----> Claude config already symlinked"
+  fi
 fi
-mkdir -p $SUBL_PATH/Packages/User $SUBL_PATH/Installed\ Packages
-backup "$SUBL_PATH/Packages/User/Preferences.sublime-settings"
-curl -k https://sublime.wbond.net/Package%20Control.sublime-package > $SUBL_PATH/Installed\ Packages/Package\ Control.sublime-package
-ln -s $PWD/Preferences.sublime-settings $SUBL_PATH/Packages/User/Preferences.sublime-settings
-ln -s $PWD/Package\ Control.sublime-settings $SUBL_PATH/Packages/User/Package\ Control.sublime-settings
 
-zsh ~/.zshrc
+# Git configuration
+echo ""
+echo "=== Git configuration ==="
+git config --global core.editor "code --wait"
+echo "-----> Set git editor to VS Code"
 
-echo "👌  Carry on with git setup!"
+echo ""
+echo "Done! Restart your terminal or run: source ~/.zshrc"
