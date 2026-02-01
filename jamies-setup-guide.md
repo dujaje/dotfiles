@@ -17,8 +17,8 @@ This guide will walk you through setting up any new Mac computer as your perfect
 7. [Oh My Zsh (Beautiful Terminal)](#oh-my-zsh-beautiful-terminal)
 8. [Your Dotfiles (Personal Configuration)](#your-dotfiles-personal-configuration)
 9. [Visual Studio Code](#visual-studio-code)
-10. [Node.js (Optional)](#nodejs-optional)
-11. [Ruby (Optional)](#ruby-optional)
+10. [Node.js](#nodejs)
+11. [Ruby](#ruby)
 12. [PostgreSQL (Optional)](#postgresql-optional)
 13. [macOS Settings](#macos-settings)
 14. [Verification](#verification)
@@ -186,11 +186,16 @@ brew upgrade wget || brew install wget
 brew upgrade jq || brew install jq
 ```
 
+```bash
+brew upgrade pygments || brew install pygments
+```
+
 **What these tools do:**
 - `git` - Version control system (tracks changes to your files)
 - `gh` - GitHub's official command-line tool
 - `wget` - Downloads files from the internet
 - `jq` - Processes JSON data (useful for working with APIs)
+- `pygments` - Syntax highlighting (required by Oh My Zsh's common-aliases plugin)
 
 ---
 
@@ -376,18 +381,6 @@ If the `code` command doesn't work:
 Copy-paste each command one at a time:
 
 ```bash
-code --install-extension ms-vscode.sublime-keybindings
-```
-
-```bash
-code --install-extension emmanuelbeziat.vscode-great-icons
-```
-
-```bash
-code --install-extension github.github-vscode-theme
-```
-
-```bash
 code --install-extension MS-vsliveshare.vsliveshare
 ```
 
@@ -396,69 +389,75 @@ code --install-extension dbaeumer.vscode-eslint
 ```
 
 **What these extensions do:**
-- **Sublime Keybindings** - Familiar keyboard shortcuts
-- **Great Icons** - Pretty file icons in the sidebar
-- **GitHub Theme** - Nice color theme
 - **Live Share** - Share your code with others in real-time
 - **ESLint** - Highlights JavaScript errors
 
 ---
 
-## Node.js (Optional)
+## Node.js
 
-Node.js lets you run JavaScript outside a web browser. This is useful if you work with JavaScript-based tools.
+Node.js lets you run JavaScript outside a web browser. Many development tools depend on Node.js.
 
-### Step 1: Install NVM (Node Version Manager)
+### Step 1: Install NVM (Node Version Manager) via Homebrew
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | zsh
+brew install nvm
 ```
 
-### Step 2: Reload Terminal
+### Step 2: Create the NVM Directory
+
+```bash
+mkdir -p ~/.nvm
+```
+
+### Step 3: Reload Terminal
 
 ```bash
 exec zsh
 ```
 
-### Step 3: Verify NVM is Installed
+Your dotfiles already include the correct NVM configuration for Homebrew. The zshrc loads nvm from `/opt/homebrew/opt/nvm/nvm.sh`.
+
+### Step 4: Verify NVM is Installed
 
 ```bash
 nvm -v
 ```
 
-You should see a version number like `0.39.1`.
+You should see a version number like `0.40.x`.
 
-### Step 4: Install Node.js
+### Step 5: Install Node.js
 
 ```bash
-nvm install 20
+nvm install node
 ```
 
-### Step 5: Verify Node is Installed
+This installs the latest version. You can also install a specific version like `nvm install 20`.
+
+### Step 6: Verify Node is Installed
 
 ```bash
 node -v
 ```
 
-You should see something like `v20.x.x`.
-
-### Step 6: Clean Up
-
-```bash
-nvm cache clear
-```
+You should see something like `v25.x.x` (or whatever the latest version is).
 
 ---
 
-## Ruby (Optional)
+## Ruby
 
-Ruby is a programming language. If you need to work with Ruby projects, follow these steps.
+Ruby is a programming language used by many development tools and frameworks (like Rails).
 
-### Step 1: Install rbenv (Ruby Version Manager)
+### Step 1: Install rbenv and ruby-build via Homebrew
 
 ```bash
-brew install rbenv libyaml
+brew install rbenv ruby-build libyaml
 ```
+
+**What these are:**
+- `rbenv` - Manages multiple Ruby versions
+- `ruby-build` - Plugin that provides the `rbenv install` command
+- `libyaml` - Required dependency for Ruby
 
 ### Step 2: Reload Terminal
 
@@ -468,16 +467,16 @@ exec zsh
 
 ### Step 3: Install Ruby
 
-This takes 5-10 minutes:
+This compiles Ruby from source and takes several minutes:
 
 ```bash
-rbenv install 3.3.5
+rbenv install 3.3.0
 ```
 
 ### Step 4: Set Default Ruby Version
 
 ```bash
-rbenv global 3.3.5
+rbenv global 3.3.0
 ```
 
 ### Step 5: Reload and Verify
@@ -490,7 +489,7 @@ exec zsh
 ruby -v
 ```
 
-You should see `ruby 3.3.5...`
+You should see `ruby 3.3.0...`
 
 ---
 
@@ -615,19 +614,19 @@ code --version
 ```
 Should show a version number
 
-### Check Node (if installed)
+### Check Node
 
 ```bash
 node -v
 ```
-Should show: `v20.x.x`
+Should show a version number like `v25.x.x`
 
-### Check Ruby (if installed)
+### Check Ruby
 
 ```bash
 ruby -v
 ```
-Should show: `ruby 3.3.x`
+Should show: `ruby 3.3.0...`
 
 ---
 
@@ -702,5 +701,9 @@ Your Mac is now set up as a development environment! You have:
 - VS Code for editing code
 - Your personal dotfiles configuration
 - Homebrew for installing future tools
+- Node.js (via nvm) for JavaScript development
+- Ruby (via rbenv) for Ruby development
+
+**Next:** See the [Maintenance Guide](jamies-maintenance-guide.md) for how to keep everything up to date.
 
 Happy coding!
